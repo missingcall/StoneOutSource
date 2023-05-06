@@ -1,0 +1,131 @@
+plugins {
+    id 'com.android.application'
+    id 'android-junk-code'
+}
+
+android {
+    namespace 'com.jilsfdivbvetwo.jlsat167'
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.jilsfdivbvetwo.jlsat167"
+        minSdk 23
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        multiDexEnabled true
+    }
+
+    // 自动化打包配置
+    signingConfigs {
+
+        // 测试环境
+        debug {
+            v2SigningEnabled true
+            v1SigningEnabled true
+            storeFile file('../buildsystem/colorsbong.jks')
+            storePassword "779632"
+            keyAlias "ColorSbong"
+            keyPassword "779632"
+        }
+
+        // 线上环境
+        release {
+            v2SigningEnabled true
+            v1SigningEnabled true
+            storeFile file('../buildsystem/colorsbong.jks')
+            storePassword "779632"
+            keyAlias "ColorSbong"
+            keyPassword "779632"
+        }
+    }
+
+    buildTypes {
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            // 启用代码压缩、优化及混淆:true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release    //这是重点
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        viewBinding true
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+    androidJunkCode {
+        def config = {
+            packageBase = "com.uxyc.lexdh.ui" // 包名
+            packageCount = 50 // 包中生成的文件夹数量
+            activityCountPerPackage = 12 // 每个包中 activity 的数量
+            excludeActivityJavaFile = false
+            otherCountPerPackage = 50 // 每个包中生成的其他文件数量
+            methodCountPerClass = 20 // 每个 class 中生成方法数
+            resPrefix = "uxyc_lexdh_" // res 的相关前缀
+            drawableCount = 300 // drawable 数量
+            stringCount = 300 // string 数量
+        }
+        variantConfig {
+            debug config
+            release config
+        }
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    //utilcode
+    implementation 'com.blankj:utilcodex:1.31.1'
+    //multidex
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    //google
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
+    implementation 'com.google.api-client:google-api-client:1.31.0'
+    implementation 'com.google.api-client:google-api-client-android:1.31.0'
+    implementation 'com.google.apis:google-api-services-people:v1-rev20201117-1.31.0'
+
+    //cachewebview
+    implementation 'ren.yale.android:cachewebviewlib:2.2.1'
+    // required if your app is in the Google Play Store (tip: avoid using bundled play services libs)
+    implementation 'com.google.android.gms:play-services-ads-identifier:17.1.0+'
+    //appsflyer
+    implementation 'com.appsflyer:af-android-sdk:6.9.0'
+    //引荐来源，帮助归因
+    implementation "com.android.installreferrer:installreferrer:2.2"
+    //agentweb
+    implementation 'com.github.Justson.AgentWeb:agentweb-core:v5.0.6-androidx' // (必选)
+
+    //rxvolley
+    implementation 'com.github.kymjs.rxvolley:rxvolley:3.0.1'
+    implementation 'com.github.kymjs.rxvolley:okhttp3:3.0.0'
+
+
+    //RxJava的依赖包
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+
+    //gson
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
