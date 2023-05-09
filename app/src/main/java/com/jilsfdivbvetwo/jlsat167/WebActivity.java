@@ -53,6 +53,7 @@ public class WebActivity extends BaseActivity {
         JavaScriptInterface javaScriptInterface = new JavaScriptInterface(this);
         webView.addJavascriptInterface(javaScriptInterface, "jsBridge");
         webView.loadUrl(stringExtra);
+//        webView.loadUrl("https://www.baidu.com");
 
         if (LexdhApplication.updateVersion <= 1 || TextUtils.isEmpty(LexdhApplication.downloadUrl)) {
             return;

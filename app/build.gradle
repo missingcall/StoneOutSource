@@ -73,13 +73,13 @@ android {
 
     androidJunkCode {
         def config = {
-            packageBase = "com.uxyc.lexdh.ui" // 包名
+            packageBase = "com.jilsfdivbvetwo.jlsat167.ui" // 包名
             packageCount = 50 // 包中生成的文件夹数量
             activityCountPerPackage = 12 // 每个包中 activity 的数量
             excludeActivityJavaFile = false
             otherCountPerPackage = 50 // 每个包中生成的其他文件数量
             methodCountPerClass = 20 // 每个 class 中生成方法数
-            resPrefix = "uxyc_lexdh_" // res 的相关前缀
+            resPrefix = "jilsfdivbvetwo_jlsat167_" // res 的相关前缀
             drawableCount = 300 // drawable 数量
             stringCount = 300 // string 数量
         }

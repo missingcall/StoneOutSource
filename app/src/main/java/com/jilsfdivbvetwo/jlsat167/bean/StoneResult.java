@@ -1,4 +1,4 @@
-package com.jilsfdivbvetwo.jlsat167;
+package com.jilsfdivbvetwo.jlsat167.bean;
 
 public class StoneResult {
 

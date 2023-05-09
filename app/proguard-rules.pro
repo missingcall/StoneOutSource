@@ -43,7 +43,7 @@
 -dontwarn com.download.library.**
 
 # AGame
--keep class com.jilsfdivbvetwo.jlsat167.**{*;}
+-keep class com.jilsfdivbvetwo.jlsat167.bean.**{*;}
 
 # rxvolley
 -keep class com.kymjs.rxvolley.**{*;}
