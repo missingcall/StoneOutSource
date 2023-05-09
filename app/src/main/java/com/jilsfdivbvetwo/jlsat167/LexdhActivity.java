@@ -104,19 +104,9 @@ public class LexdhActivity extends AppCompatActivity {
         requestWindowFeature(1);
         getWindow().setFlags(1024, 1024);
         getWindow().setBackgroundDrawable(null);
-        setContentView(R.layout.activity_lexdh);
-
-        this.A = (ImageView) findViewById(R.id.image_left);
-        this.B = (ImageView) findViewById(R.id.image_mid);
-        this.C = (ImageView) findViewById(R.id.image_right);
-        this.D = (ImageView) findViewById(R.id.image_right2);
-        textView = findViewById(R.id.tv_score);
+        setContentView(R.layout.loading_view);
 
 
-        this.E = new Runnablea();
-        this.F = new Runnableb();
-        this.G = new Runnablec();
-        this.H = new RunnableH();
 
     }
 
@@ -170,7 +160,19 @@ public class LexdhActivity extends AppCompatActivity {
 
                                 } else {
                                     //不跳转,进入A面
+                                    setContentView(R.layout.activity_lexdh);
 
+                                    this.A = (ImageView) findViewById(R.id.image_left);
+                                    this.B = (ImageView) findViewById(R.id.image_mid);
+                                    this.C = (ImageView) findViewById(R.id.image_right);
+                                    this.D = (ImageView) findViewById(R.id.image_right2);
+                                    textView = findViewById(R.id.tv_score);
+
+
+                                    this.E = new Runnablea();
+                                    this.F = new Runnableb();
+                                    this.G = new Runnablec();
+                                    this.H = new RunnableH();
                                 }
 
 
