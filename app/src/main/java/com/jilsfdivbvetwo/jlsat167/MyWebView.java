@@ -93,17 +93,13 @@ public class MyWebView extends WebView {
     private void initWebViewSettings() {
         WebSettings settings = getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        settings.setSupportMultipleWindows(true);
+//        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+//        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+//        settings.setSupportMultipleWindows(true);
         settings.setLoadWithOverviewMode(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
-        settings.setGeolocationEnabled(true);
-        settings.setPluginState(WebSettings.PluginState.ON_DEMAND);
-        settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        settings.setBlockNetworkImage(false);
         settings.setDefaultTextEncodingName("utf-8");
         settings.setUseWideViewPort(true);
         settings.setSupportZoom(false);
