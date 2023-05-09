@@ -24,20 +24,20 @@ android {
         debug {
             v2SigningEnabled true
             v1SigningEnabled true
-            storeFile file('../buildsystem/colorsbong.jks')
-            storePassword "779632"
-            keyAlias "ColorSbong"
-            keyPassword "779632"
+            storeFile file('../buildsystem/jilsfdivbvetwo.jks')
+            storePassword "846279"
+            keyAlias "Jilsfdivbvetwo"
+            keyPassword "846279"
         }
 
         // 线上环境
         release {
             v2SigningEnabled true
             v1SigningEnabled true
-            storeFile file('../buildsystem/colorsbong.jks')
-            storePassword "779632"
-            keyAlias "ColorSbong"
-            keyPassword "779632"
+            storeFile file('../buildsystem/jilsfdivbvetwo.jks')
+            storePassword "846279"
+            keyAlias "Jilsfdivbvetwo"
+            keyPassword "846279"
         }
     }
 
