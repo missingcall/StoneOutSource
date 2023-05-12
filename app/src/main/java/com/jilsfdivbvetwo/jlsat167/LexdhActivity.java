@@ -32,7 +32,8 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.RegexUtils;
 import com.jilsfdivbvetwo.jlsat167.bean.DecryptDataResult;
 import com.jilsfdivbvetwo.jlsat167.bean.StoneResult;
-import com.jilsfdivbvetwo.jlsat167.snake.GameActivity;
+
+import com.jilsfdivbvetwo.jlsat167.game.GameActivity;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.DefaultWebClient;
 import com.just.agentweb.WebChromeClient;

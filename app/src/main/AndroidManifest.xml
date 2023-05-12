@@ -40,7 +40,7 @@
         </activity>
 
         <activity
-            android:name=".snake.GameActivity"
+            android:name=".game.GameActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:hardwareAccelerated="true"
