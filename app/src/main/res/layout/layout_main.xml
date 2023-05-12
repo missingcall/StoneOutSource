@@ -13,4 +13,5 @@
         android:src="@mipmap/icon"
         />
 
+    <include layout="@layout/layout_web" />
 </RelativeLayout>

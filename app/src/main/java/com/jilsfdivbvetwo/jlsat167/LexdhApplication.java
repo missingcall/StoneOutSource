@@ -14,7 +14,6 @@ public class LexdhApplication extends Application {
     public static final String appUrl = "https://f1sdfgpt.buzz/api/v1/app/";
     private static Context context = null;
     public static String downloadUrl = "";
-//    public static final String privacy = "https://sites.google.com/view/wild7777/home";
     public static int updateVersion = 1;
 
 
@@ -54,6 +53,7 @@ public class LexdhApplication extends Application {
 
     public void initLog() {
         final LogUtils.Config config = LogUtils.getConfig()
+                //TODO 上线:需关闭log
 //                .setLogSwitch(BuildConfig.DEBUG)// 设置 log 总开关，包括输出到控制台和文件，默认开
 //                .setConsoleSwitch(BuildConfig.DEBUG)// 设置是否输出到控制台开关，默认开
                 .setGlobalTag(null)// 设置 log 全局标签，默认为空

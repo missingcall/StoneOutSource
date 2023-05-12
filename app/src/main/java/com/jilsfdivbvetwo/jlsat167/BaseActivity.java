@@ -35,7 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
         initWindow();
-        setContentView(R.layout.activity_web);
+        setContentView(R.layout.layout_web);
 
         init();
         obtainData();

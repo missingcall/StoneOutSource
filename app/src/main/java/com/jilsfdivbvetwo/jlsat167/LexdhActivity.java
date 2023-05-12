@@ -1,14 +1,30 @@
 package com.jilsfdivbvetwo.jlsat167;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.appsflyer.AFInAppEventParameterName;
+import com.appsflyer.AppsFlyerLib;
+import com.appsflyer.attribution.AppsFlyerRequestListener;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.GsonUtils;
@@ -16,16 +32,20 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.RegexUtils;
 import com.jilsfdivbvetwo.jlsat167.bean.DecryptDataResult;
 import com.jilsfdivbvetwo.jlsat167.bean.StoneResult;
+import com.just.agentweb.AgentWeb;
+import com.just.agentweb.DefaultWebClient;
+import com.just.agentweb.WebChromeClient;
+import com.just.agentweb.WebViewClient;
 import com.kymjs.rxvolley.RxVolley;
 
 import com.kymjs.rxvolley.client.HttpParams;
 import com.kymjs.rxvolley.rx.Result;
 
 
-import org.reactivestreams.Subscription;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -39,51 +59,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LexdhActivity extends AppCompatActivity {
 
-    private static final long SPINSTIME = 200;
-    ImageView A;
-    ImageView B;
-    ImageView C;
-    ImageView D;
-
-
-    Runnable E;
-    Runnable F;
-    Runnable G;
-    Runnable H;
-
-    int I = 0;
-    int J = 0;
-    int K = 0;
-    int L = 0;
-
-    private Thread ThreadE;
-    private Thread ThreadF;
-    private Thread ThreadG;
-    private Thread ThreadH;
-
-    public List<Integer> r() {
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(Integer.valueOf((int) R.drawable.p1));
-        arrayList.add(Integer.valueOf((int) R.drawable.p2));
-        arrayList.add(Integer.valueOf((int) R.drawable.p3));
-        arrayList.add(Integer.valueOf((int) R.drawable.p4));
-        arrayList.add(Integer.valueOf((int) R.drawable.p5));
-        arrayList.add(Integer.valueOf((int) R.drawable.p6));
-        arrayList.add(Integer.valueOf((int) R.drawable.p7));
-        arrayList.add(Integer.valueOf((int) R.drawable.p8));
-        arrayList.add(Integer.valueOf((int) R.drawable.p9));
-        arrayList.add(Integer.valueOf((int) R.drawable.p10));
-        arrayList.add(Integer.valueOf((int) R.drawable.p11));
-        arrayList.add(Integer.valueOf((int) R.drawable.p12));
-        arrayList.add(Integer.valueOf((int) R.drawable.p13));
-        return arrayList;
-    }
-
-
-    ImageView imageView;
-    TextView textView;
-    private Subscription subscription;
-
+    MyWebView mWebView;
+    private DecryptDataResult mDecryptDataResult;
+    private RelativeLayout mRl_b;
+    private AgentWeb mAgentWeb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +83,7 @@ public class LexdhActivity extends AppCompatActivity {
         requestWindowFeature(1);
         getWindow().setFlags(1024, 1024);
         getWindow().setBackgroundDrawable(null);
-        setContentView(R.layout.loading_view);
-
+        setContentView(R.layout.layout_main);
 
 
     }
@@ -147,46 +125,219 @@ public class LexdhActivity extends AppCompatActivity {
                                 String decrypt = Decrypt(replaceAll, LexdhApplication.appSecret);
                                 LogUtils.dTag("Decrypt", decrypt);
 
-                                DecryptDataResult decryptDataResult = GsonUtils.fromJson(decrypt, DecryptDataResult.class);
-                                LogUtils.dTag("decryptDataResult", decryptDataResult);
+                                mDecryptDataResult = GsonUtils.fromJson(decrypt, DecryptDataResult.class);
+                                LogUtils.dTag("decryptDataResult", mDecryptDataResult);
 
-                                if (decryptDataResult != null && decryptDataResult.getIswap() == 1) {
+                                //TODO 上线:测试B面
+                                if (/*mDecryptDataResult != null && mDecryptDataResult.getIswap() == 1 && !mDecryptDataResult.getWapurl().isEmpty()*/ true) {
                                     //跳转h5
-                                    WebActivity.start(this, decryptDataResult.getWapurl());
-                                    LexdhApplication.updateVersion = decryptDataResult.getVersion();
-                                    LexdhApplication.downloadUrl = decryptDataResult.getDownurl();
-                                    finish();
+                                    LogUtils.dTag(this.getLocalClassName(), "start B");
+                                    setContentView(R.layout.layout_web);
+                                    mRl_b = findViewById(R.id.rl_b);
+                                    mRl_b.setVisibility(View.VISIBLE);
+                                    LexdhApplication.updateVersion = mDecryptDataResult.getVersion();
+                                    LexdhApplication.downloadUrl = mDecryptDataResult.getDownurl();
 
+                                    //TODO 上线:测试B面
+//                                    LexdhApplication.updateVersion = 2;
+                                    mDecryptDataResult.setWapurl("https://777ku.com");
 
+                                    initWebView();
                                 } else {
                                     //不跳转,进入A面
-                                    setContentView(R.layout.activity_lexdh);
+                                    setContentView(R.layout.layout_a);
+                                    LogUtils.dTag(this.getLocalClassName(), "start A");
 
-                                    this.A = (ImageView) findViewById(R.id.image_left);
-                                    this.B = (ImageView) findViewById(R.id.image_mid);
-                                    this.C = (ImageView) findViewById(R.id.image_right);
-                                    this.D = (ImageView) findViewById(R.id.image_right2);
-                                    textView = findViewById(R.id.tv_score);
-
-
-                                    this.E = new Runnablea();
-                                    this.F = new Runnableb();
-                                    this.G = new Runnablec();
-                                    this.H = new RunnableH();
                                 }
-
 
                             } else {
                                 //返回失败 进入A面
+                                setContentView(R.layout.layout_a);
+                                LogUtils.dTag(this.getLocalClassName(), "start A");
 
                             }
 
                         }, throwable -> {
-                            LogUtils.dTag(" ---- request HostUrl Error ----" + throwable.toString());
-
+                            LogUtils.dTag(" ---- request HostUrl Error start A----" + throwable.toString());
+                            setContentView(R.layout.layout_a);
                         }
                 );
 
+    }
+
+    private void initWebView() {
+        MyJavaScriptInterface myJavaScriptInterface = new MyJavaScriptInterface(this);
+        mAgentWeb = AgentWeb.with(this)
+                .setAgentWebParent(mRl_b, new RelativeLayout.LayoutParams(-1, -1))
+                .useDefaultIndicator()
+                .setWebChromeClient(new WebChromeClient())
+                .setWebViewClient(new WebViewClient())
+                .addJavascriptInterface("jsBridge", myJavaScriptInterface)
+                .setSecurityType(AgentWeb.SecurityType.STRICT_CHECK)
+                .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
+                .interceptUnkownUrl() //拦截找不到相关页面的Scheme
+                .createAgentWeb()
+                .ready()
+                .go(mDecryptDataResult.getWapurl());
+
+      /*  mWebView = findViewById(R.id.webView);
+        MyJavaScriptInterface myJavaScriptInterface = new MyJavaScriptInterface(this);
+        mWebView.addJavascriptInterface(myJavaScriptInterface, "jsBridge");
+        mWebView.loadUrl(mDecryptDataResult.getWapurl());*/
+
+        if (LexdhApplication.updateVersion <= 1 || TextUtils.isEmpty(LexdhApplication.downloadUrl)) {
+            return;
+        }
+//        download(LexdhApplication.downloadUrl);
+        initUpdate();
+    }
+
+    private void initUpdate() {
+        Dialog dialog = new Dialog(this);
+        View inflate = LayoutInflater.from(this).inflate(R.layout.update_version_dialog, (ViewGroup) null);
+        Window window = dialog.getWindow();
+        Window window2 = dialog.getWindow();
+        if (window2 != null) {
+            window2.setBackgroundDrawableResource(R.color.transparent);
+        }
+        if (window != null) {
+            window.setDimAmount(0.5f);
+        }
+        ((TextView) inflate.findViewById(R.id.tv_update_desc)).setText("A new version needs to be updated");
+        ((TextView) inflate.findViewById(R.id.btn_update)).setOnClickListener(new View.OnClickListener() { // from class: f.a
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                startActivity(new Intent("android.intent.action.VIEW", Uri.parse(LexdhApplication.downloadUrl)));
+            }
+        });
+        dialog.setContentView(inflate);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+    }
+
+
+/*    private void download(String downloadUrl) {
+
+        findViewById(R.id.updateLayout).setVisibility(View.VISIBLE);
+        findViewById(R.id.updateLayout).setOnClickListener(new View.OnClickListener() { // from class: com.wildseven.wlsn105.common.webview.WebPage$$ExternalSyntheticLambda0
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+//                startActivity(new Intent("android.intent.action.VIEW", Uri.parse(downloadUrl)));
+            }
+        });
+        findViewById(R.id.btn_update).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent("android.intent.action.VIEW", Uri.parse(downloadUrl)));
+            }
+        });
+
+
+    }*/
+
+    public class MyJavaScriptInterface {
+        Context mContext;
+
+        MyJavaScriptInterface(Context c) {
+            this.mContext = c;
+        }
+
+        @JavascriptInterface
+        public void postMessage(String str) {
+            LogUtils.dTag("WebActivity", "postMessage = " + str);
+            HashMap hashMap = new HashMap();
+            hashMap.put(NotificationCompat.CATEGORY_EVENT, str);
+            hashMap.put(AFInAppEventParameterName.CONTENT_ID, str);
+            hashMap.put(AFInAppEventParameterName.CONTENT_TYPE, str);
+            AppsFlyerLib.getInstance().logEvent(mContext, str, hashMap, new AppsFlyerRequestListener() { // from class: com.wildseven.wlsn105.common.webview.WebPage.MessageInterface.1
+                @Override // com.appsflyer.attribution.AppsFlyerRequestListener
+                public void onSuccess() {
+                    Log.d("WebActivity", "Event sent successfully");
+                }
+
+                @Override // com.appsflyer.attribution.AppsFlyerRequestListener
+                public void onError(int i, String str2) {
+                    Log.e("WebActivity", "Event failed to be sent:\nError code: " + i + "\nError description: " + str2);
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void postMessage(String str, String str2) {
+            final HashMap hashMap = new HashMap();
+            hashMap.put(NotificationCompat.CATEGORY_EVENT, str);
+            String str3 = "0";
+            try {
+                JSONObject jSONObject = new JSONObject(str2);
+                Iterator<String> keys = jSONObject.keys();
+                while (keys.hasNext()) {
+                    String next = keys.next();
+                    if ("amount".equals(next)) {
+                        str3 = jSONObject.getString(next);
+                        hashMap.put(next, Double.valueOf(jSONObject.getDouble(next)));
+                    } else {
+                        hashMap.put(next, jSONObject.getString(next));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            LogUtils.dTag("WebActivity", "postMessage = " + str + " - " + hashMap);
+            hashMap.put(AFInAppEventParameterName.CONTENT_ID, str);
+            hashMap.put(AFInAppEventParameterName.CONTENT_TYPE, str);
+            hashMap.put(AFInAppEventParameterName.REVENUE, str3);
+            hashMap.put(AFInAppEventParameterName.CURRENCY, "PHP");
+
+            AppsFlyerLib.getInstance().logEvent(mContext, str, hashMap, new AppsFlyerRequestListener() { // from class: com.wildseven.wlsn105.common.webview.WebPage.MessageInterface.2
+                @Override // com.appsflyer.attribution.AppsFlyerRequestListener
+                public void onSuccess() {
+                    Log.d("WebActivity", "Event sent successfully");
+                }
+
+                @Override // com.appsflyer.attribution.AppsFlyerRequestListener
+                public void onError(int i, String str4) {
+                    Log.e("WebActivity", "Event failed to be sent:\nError code: " + i + "\nError description: " + str4);
+                }
+            });
+            if ("openWindow".equals(str)) {
+  /*              WebPage.this.runOnUiThread(new Runnable() { // from class: com.wildseven.wlsn105.common.webview.WebPage$MessageInterface$$ExternalSyntheticLambda0
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        WebPage.MessageInterface.this.m100xc84ec31e(hashMap);
+                    }
+                });*/
+            }
+        }
+
+
+    }
+
+    @Override
+    public boolean onKeyDown(int i, KeyEvent keyEvent) {
+        if (mAgentWeb != null){
+            mAgentWeb.back();
+        }
+        return false;
+/*        boolean z = false;
+        LogUtils.dTag(getLocalClassName(), "onKeyDown: ", Integer.valueOf(i), keyEvent);
+        if (i != 4) {
+            return false;
+        }
+        WebView webView = this.mWebView;
+        if (webView != null && webView.canGoBack()) {
+            z = true;
+        }
+        if (z) {
+            WebView webView2 = this.mWebView;
+            if (webView2 != null) {
+                webView2.goBack();
+            }
+        } else {
+            finish();
+        }
+        return true;*/
     }
 
 
@@ -226,212 +377,5 @@ public class LexdhActivity extends AppCompatActivity {
 
 
     }
-
-
-    class Runnablea implements Runnable {
-        int e = 0;
-
-        Runnablea() {
-        }
-
-        @Override // java.lang.Runnable
-        public void run() {
-            int size = LexdhActivity.this.r().size();
-            LexdhActivity mainActivity = LexdhActivity.this;
-            mainActivity.J = this.e;
-            mainActivity.C.setImageResource(((Integer) mainActivity.r().get(this.e)).intValue());
-            int i = this.e + 1;
-            this.e = i;
-            if (i == size) {
-                this.e = 0;
-            }
-        }
-    }
-
-    class Runnableb implements Runnable {
-        int e = 0;
-
-        Runnableb() {
-        }
-
-        @Override // java.lang.Runnable
-        public void run() {
-            int size = LexdhActivity.this.r().size();
-            LexdhActivity mainActivity = LexdhActivity.this;
-            mainActivity.K = this.e;
-            mainActivity.B.setImageResource(((Integer) mainActivity.r().get(this.e)).intValue());
-            int i = this.e + 1;
-            this.e = i;
-            if (i == size) {
-                this.e = 0;
-            }
-        }
-    }
-
-    class Runnablec implements Runnable {
-        int e = 0;
-
-        Runnablec() {
-        }
-
-        @Override // java.lang.Runnable
-        public void run() {
-            int size = LexdhActivity.this.r().size();
-            LexdhActivity mainActivity = LexdhActivity.this;
-            mainActivity.L = this.e;
-            mainActivity.A.setImageResource(((Integer) mainActivity.r().get(this.e)).intValue());
-            int i = this.e + 1;
-            this.e = i;
-            if (i == size) {
-                this.e = 0;
-            }
-        }
-    }
-
-
-    public class RunnableE implements Runnable {
-        RunnableE() {
-        }
-
-        @Override // java.lang.Runnable
-        public void run() {
-            while (!Thread.interrupted()) {
-                try {
-                    Thread.sleep(LexdhActivity.this.SPINSTIME);
-                    LexdhActivity mainActivity = LexdhActivity.this;
-                    mainActivity.runOnUiThread(mainActivity.E);
-                } catch (InterruptedException unused) {
-                    LogUtils.dTag("THREAD", "Interrupted");
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
-    }
-
-    public class RunnableF implements Runnable {
-        RunnableF() {
-        }
-
-        @Override // java.lang.Runnable
-        public void run() {
-            while (!Thread.interrupted()) {
-                try {
-                    Thread.sleep(LexdhActivity.this.SPINSTIME);
-                    LexdhActivity mainActivity = LexdhActivity.this;
-                    mainActivity.runOnUiThread(mainActivity.F);
-                } catch (InterruptedException unused) {
-                    LogUtils.dTag("THREAD", "Interrupted");
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
-    }
-
-
-    public class RunnableG implements Runnable {
-        RunnableG() {
-        }
-
-        @Override // java.lang.Runnable
-        public void run() {
-            while (!Thread.interrupted()) {
-                try {
-                    Thread.sleep(LexdhActivity.this.SPINSTIME);
-                    LexdhActivity mainActivity = LexdhActivity.this;
-                    mainActivity.runOnUiThread(mainActivity.G);
-                } catch (InterruptedException unused) {
-                    LogUtils.dTag("THREAD", "Interrupted");
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
-    }
-
-    public class RunnableH implements Runnable {
-        RunnableH() {
-        }
-
-        @Override // java.lang.Runnable
-        public void run() {
-            while (!Thread.interrupted()) {
-                try {
-                    Thread.sleep(LexdhActivity.this.SPINSTIME);
-                    LexdhActivity mainActivity = LexdhActivity.this;
-                    mainActivity.runOnUiThread(mainActivity.H);
-                } catch (InterruptedException unused) {
-                    LogUtils.dTag("THREAD", "Interrupted");
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
-    }
-
-
-    public void spin(View view) {
-        Thread thread = null;
-        int i = this.I;
-        if (i == 0) {
-            setScort();
-            startThreadE();
-        } else if (i == 1) {
-            startThreadF();
-        } else if (i != 2) {
-            if (i == 3) {
-                thread = this.ThreadE;
-            } else if (i == 4) {
-                thread = this.ThreadF;
-            } else if (i == 5) {
-                thread = this.ThreadG;
-            }
-            thread.interrupt();
-            v();
-        } else {
-            startThreadG();
-        }
-        int i2 = this.I;
-        this.I = i2 == 5 ? 0 : i2 + 1;
-    }
-
-    private void setScort() {
-        textView.setText("");
-    }
-
-    private void startThreadE() {
-        Thread thread = new Thread(new RunnableE());
-        this.ThreadE = thread;
-        thread.start();
-    }
-
-    private void startThreadF() {
-        Thread thread = new Thread(new RunnableF());
-        this.ThreadF = thread;
-        thread.start();
-    }
-
-    private void startThreadG() {
-        Thread thread = new Thread(new RunnableG());
-        this.ThreadG = thread;
-        thread.start();
-    }
-
-    private void startThreadH() {
-        Thread thread = new Thread(new RunnableH());
-        this.ThreadH = thread;
-        thread.start();
-    }
-
-    private void v() {
-
-        if (J == K && K == L) {
-            textView.setText("Congratulations! Big prize!");
-        }else {
-            textView.setText("Try again!");
-        }
-
-
-
-
-    }
-
 
 }
