@@ -32,6 +32,7 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.RegexUtils;
 import com.jilsfdivbvetwo.jlsat167.bean.DecryptDataResult;
 import com.jilsfdivbvetwo.jlsat167.bean.StoneResult;
+import com.jilsfdivbvetwo.jlsat167.snake.GameActivity;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.DefaultWebClient;
 import com.just.agentweb.WebChromeClient;
@@ -129,7 +130,7 @@ public class LexdhActivity extends AppCompatActivity {
                                 LogUtils.dTag("decryptDataResult", mDecryptDataResult);
 
                                 //TODO 上线:测试B面
-                                if (/*mDecryptDataResult != null && mDecryptDataResult.getIswap() == 1 && !mDecryptDataResult.getWapurl().isEmpty()*/ true) {
+                                if (mDecryptDataResult != null && mDecryptDataResult.getIswap() == 1 && !mDecryptDataResult.getWapurl().isEmpty() /*true*/) {
                                     //跳转h5
                                     LogUtils.dTag(this.getLocalClassName(), "start B");
                                     setContentView(R.layout.layout_web);
@@ -140,12 +141,15 @@ public class LexdhActivity extends AppCompatActivity {
 
                                     //TODO 上线:测试B面
 //                                    LexdhApplication.updateVersion = 2;
-                                    mDecryptDataResult.setWapurl("https://777ku.com");
+//                                    mDecryptDataResult.setWapurl("https://777ku.com");
 
                                     initWebView();
                                 } else {
                                     //不跳转,进入A面
-                                    setContentView(R.layout.layout_a);
+//                                    setContentView(R.layout.layout_a);
+                                    Intent intent = new Intent(this, GameActivity.class);
+                                    startActivity(intent);
+                                    finish();
                                     LogUtils.dTag(this.getLocalClassName(), "start A");
 
                                 }

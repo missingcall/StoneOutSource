@@ -84,7 +84,7 @@ android {
             stringCount = 300 // string 数量
         }
         variantConfig {
-            debug config
+
             release config
         }
     }
