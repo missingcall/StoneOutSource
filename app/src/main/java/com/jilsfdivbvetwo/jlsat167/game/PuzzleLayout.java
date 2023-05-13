@@ -13,8 +13,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.jilsfdivbvetwo.jlsat167.R;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -26,7 +24,7 @@ import java.util.Random;
  * Created by dengw on 2017/5/31.
  */
 
-public class LoyabLayout extends RelativeLayout implements View.OnClickListener {
+public class PuzzleLayout extends RelativeLayout implements View.OnClickListener {
     private int mColumn = 3;
     /**
      * 容器的内边距
@@ -129,15 +127,15 @@ public class LoyabLayout extends RelativeLayout implements View.OnClickListener 
         ;
     };
 
-    public LoyabLayout(Context context) {
+    public PuzzleLayout(Context context) {
         this(context, null);
     }
 
-    public LoyabLayout(Context context, AttributeSet attrs) {
+    public PuzzleLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LoyabLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PuzzleLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         init();

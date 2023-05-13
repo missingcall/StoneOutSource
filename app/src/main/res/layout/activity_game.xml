@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android = "http://schemas.android.com/apk/res/android"
-    xmlns:tools = "http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_dog"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
-    <com.jilsfdivbvetwo.jlsat167.game.LoyabLayout
+    <com.jilsfdivbvetwo.jlsat167.game.PuzzleLayout
         android:id="@+id/id_puzzle"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="3dp"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:background="#aa000000"
+        android:padding="3dp" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/id_puzzle"
-        android:layout_margin="3dp">
+        android:layout_margin="3dp"
+        android:visibility="gone">
+
         <TextView
+            android:id="@+id/id_level"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/id_level"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:padding="4dp"
-            android:layout_marginTop="10dp"
-            android:text="Level : 1"/>
+            android:text="Level : 1"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
@@ -36,18 +39,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_puzzle"
         android:layout_margin="3dp">
+
         <TextView
+            android:id="@+id/id_time"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/id_time"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:padding="4dp"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            android:text="Remaining Time : "/>
+            android:text="Remaining Time : "
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
