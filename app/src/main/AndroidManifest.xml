@@ -45,6 +45,7 @@
             android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleTask" />
+
     </application>
 
 </manifest>

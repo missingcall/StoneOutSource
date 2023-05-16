@@ -1,58 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/bg_dog"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
 
-    <com.jilsfdivbvetwo.jlsat167.game.PuzzleLayout
-        android:id="@+id/id_puzzle"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_centerInParent="true"
-        android:background="#aa000000"
-        android:padding="3dp" />
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/id_puzzle"
-        android:layout_margin="3dp"
-        android:visibility="gone">
+    <com.jilsfdivbvetwo.jlsat167.game.GameView
+        android:id="@+id/gameview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="matrix" />
 
-        <TextView
-            android:id="@+id/id_level"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:padding="4dp"
-            android:text="Level : 1"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:clickable="false"
+        android:gravity="center"
+        android:text="The current level:"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+    <ImageButton
+        android:id="@+id/game_back"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        app:layout_constraintLeft_toRightOf="@id/game_left"
+        app:layout_constraintBottom_toTopOf="@id/game_down"
+        android:src="@drawable/btn_back"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/btn_back" />
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/id_puzzle"
-        android:layout_margin="3dp">
+    <ImageButton
+        android:id="@+id/game_up"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitXY"
+        app:layout_constraintLeft_toRightOf="@id/game_left"
+        app:layout_constraintBottom_toTopOf="@id/game_back"
+        android:src="@drawable/btn_up"
+        app:srcCompat="@drawable/btn_up" />
 
-        <TextView
-            android:id="@+id/id_time"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:padding="4dp"
-            android:text="Remaining Time : "
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
+    <ImageButton
+        android:id="@+id/game_down"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/btn_down"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/game_left"
+        app:srcCompat="@drawable/btn_down" />
 
-    </RelativeLayout>
+    <ImageButton
+        android:id="@+id/game_left"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@id/game_down"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:src="@drawable/btn_left"
+        app:srcCompat="@drawable/btn_left" />
 
-</RelativeLayout>
+    <ImageButton
+        android:id="@+id/game_right"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_toEndOf="@+id/game_down"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@id/game_down"
+        app:layout_constraintLeft_toRightOf="@id/game_back"
+        android:src="@drawable/btn_right"
+        app:srcCompat="@drawable/btn_right" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
