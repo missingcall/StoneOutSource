@@ -147,27 +147,27 @@ public class LexdhActivity extends AppCompatActivity {
                                     initWebView();
                                 } else {
                                     //不跳转,进入A面
-//                                    setContentView(R.layout.layout_a);
-                                    Intent intent = new Intent(this, GameActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                    LogUtils.dTag(this.getLocalClassName(), "start A");
+                                    startAGame();
 
                                 }
 
                             } else {
                                 //返回失败 进入A面
-                                setContentView(R.layout.layout_a);
-                                LogUtils.dTag(this.getLocalClassName(), "start A");
-
+                                startAGame();
                             }
 
                         }, throwable -> {
-                            LogUtils.dTag(" ---- request HostUrl Error start A----" + throwable.toString());
-                            setContentView(R.layout.layout_a);
+                            startAGame();
                         }
                 );
 
+    }
+
+    private void startAGame() {
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+        finish();
+        LogUtils.dTag(this.getLocalClassName(), "start A");
     }
 
     private void initWebView() {
@@ -321,7 +321,7 @@ public class LexdhActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
-        if (mAgentWeb != null){
+        if (mAgentWeb != null) {
             mAgentWeb.back();
         }
         return false;
