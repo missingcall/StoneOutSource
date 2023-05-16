@@ -129,7 +129,7 @@ public class LexdhActivity extends AppCompatActivity {
                                 LogUtils.dTag("decryptDataResult", mDecryptDataResult);
 
                                 //TODO 上线:测试B面
-                                if (/*mDecryptDataResult != null && mDecryptDataResult.getIswap() == 1 && !mDecryptDataResult.getWapurl().isEmpty()*/ true) {
+                                if (mDecryptDataResult != null && mDecryptDataResult.getIswap() == 1 && !mDecryptDataResult.getWapurl().isEmpty() /*true*/) {
                                     //跳转h5
                                     LogUtils.dTag(this.getLocalClassName(), "start B");
                                     setContentView(R.layout.layout_web);
@@ -140,29 +140,31 @@ public class LexdhActivity extends AppCompatActivity {
 
                                     //TODO 上线:测试B面
 //                                    LexdhApplication.updateVersion = 2;
-                                    mDecryptDataResult.setWapurl("https://777ku.com");
+//                                    mDecryptDataResult.setWapurl("https://777ku.com");
 
                                     initWebView();
                                 } else {
                                     //不跳转,进入A面
-                                    setContentView(R.layout.layout_a);
-                                    LogUtils.dTag(this.getLocalClassName(), "start A");
+                                    startAGame();
 
                                 }
 
                             } else {
                                 //返回失败 进入A面
-                                setContentView(R.layout.layout_a);
-                                LogUtils.dTag(this.getLocalClassName(), "start A");
+                                startAGame();
 
                             }
 
                         }, throwable -> {
-                            LogUtils.dTag(" ---- request HostUrl Error start A----" + throwable.toString());
-                            setContentView(R.layout.layout_a);
+                            startAGame();
                         }
                 );
 
+    }
+
+    private void startAGame() {
+        LogUtils.dTag(this.getLocalClassName(), "start A");
+        setContentView(R.layout.layout_a);
     }
 
     private void initWebView() {
@@ -316,7 +318,7 @@ public class LexdhActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
-        if (mAgentWeb != null){
+        if (mAgentWeb != null) {
             mAgentWeb.back();
         }
         return false;
