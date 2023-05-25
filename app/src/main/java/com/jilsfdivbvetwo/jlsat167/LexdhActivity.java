@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -56,7 +57,6 @@ import io.reactivex.rxjava3.core.Observable;
 
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-
 public class LexdhActivity extends AppCompatActivity {
 
     MyWebView mWebView;
@@ -93,11 +93,11 @@ public class LexdhActivity extends AppCompatActivity {
         LogUtils.dTag("checkLoadType", "请求开始");
         HttpParams httpParams = new HttpParams();
 
-        httpParams.put("appkey", LexdhApplication.appKey);
+        httpParams.put("appkey", LexdhApplication.APPKEY);
         httpParams.put("device_number", getAndroidID());
 
         Observable<Result> observable = new RxVolley.Builder()
-                .url(LexdhApplication.appUrl + AppUtils.getAppName())
+                .url(LexdhApplication.appUrlTest + AppUtils.getAppName())
                 .params(httpParams)
                 .contentType(RxVolley.ContentType.FORM)
                 .httpMethod(RxVolley.Method.POST)
@@ -122,7 +122,7 @@ public class LexdhActivity extends AppCompatActivity {
                                 String replaceAll = RegexUtils.getReplaceAll(data, "\\\\", "");
                                 LogUtils.dTag("RegexUtils", replaceAll);
 
-                                String decrypt = Decrypt(replaceAll, LexdhApplication.appSecret);
+                                String decrypt = Decrypt(replaceAll, LexdhApplication.APPSECRET);
                                 LogUtils.dTag("Decrypt", decrypt);
 
                                 mDecryptDataResult = GsonUtils.fromJson(decrypt, DecryptDataResult.class);
@@ -137,10 +137,13 @@ public class LexdhActivity extends AppCompatActivity {
                                     mRl_b.setVisibility(View.VISIBLE);
                                     LexdhApplication.updateVersion = mDecryptDataResult.getVersion();
                                     LexdhApplication.downloadUrl = mDecryptDataResult.getDownurl();
+                                    LexdhApplication.webviewSet = mDecryptDataResult.getWebview_set();
 
                                     //TODO 上线:测试B面
 //                                    LexdhApplication.updateVersion = 2;
+//                                    mDecryptDataResult.setIswap(1);
 //                                    mDecryptDataResult.setWapurl("https://777ku.com");
+//                                    mDecryptDataResult.setWapurl("https://api.gilet.ceshi.in/testwsd.html");
 
                                     initWebView();
                                 } else {
@@ -152,10 +155,10 @@ public class LexdhActivity extends AppCompatActivity {
                             } else {
                                 //返回失败 进入A面
                                 startAGame();
-
                             }
 
                         }, throwable -> {
+                            LogUtils.e(throwable);
                             startAGame();
                         }
                 );
@@ -163,29 +166,45 @@ public class LexdhActivity extends AppCompatActivity {
     }
 
     private void startAGame() {
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+        finish();
         LogUtils.dTag(this.getLocalClassName(), "start A");
-        setContentView(R.layout.layout_a);
     }
 
     private void initWebView() {
-        MyJavaScriptInterface myJavaScriptInterface = new MyJavaScriptInterface(this);
-        mAgentWeb = AgentWeb.with(this)
+/*        mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent(mRl_b, new RelativeLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
                 .setWebChromeClient(new WebChromeClient())
                 .setWebViewClient(new WebViewClient())
-                .addJavascriptInterface("jsBridge", myJavaScriptInterface)
+//                .addJavascriptInterface("jsBridge", myJavaScriptInterface)
+//                .addJavascriptInterface("Android", myJavaScriptInterface)
+                .addJavascriptInterface(LexdhApplication.webviewSet.equals("testku.html") ? "jsBridge" : "Android", myJavaScriptInterface)
                 .setSecurityType(AgentWeb.SecurityType.STRICT_CHECK)
                 .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
                 .interceptUnkownUrl() //拦截找不到相关页面的Scheme
                 .createAgentWeb()
                 .ready()
-                .go(mDecryptDataResult.getWapurl());
+                .go(mDecryptDataResult.getWapurl());*/
 
-      /*  mWebView = findViewById(R.id.webView);
-        MyJavaScriptInterface myJavaScriptInterface = new MyJavaScriptInterface(this);
-        mWebView.addJavascriptInterface(myJavaScriptInterface, "jsBridge");
-        mWebView.loadUrl(mDecryptDataResult.getWapurl());*/
+        mWebView = findViewById(R.id.webview);
+
+        MyJavaScriptInterface myJavaScriptInterface;
+        if (LexdhApplication.webviewSet.equals(LexdhApplication.WEBVIEW_SET_777KU)) {
+            // 777ku
+            myJavaScriptInterface = new JavaScriptInterfaceFor777(this);
+            mWebView.addJavascriptInterface(myJavaScriptInterface, "jsBridge");
+        } else if (LexdhApplication.webviewSet.equals(LexdhApplication.WEBVIEW_SET_WSD)) {
+            // Wsd
+            myJavaScriptInterface = new JavaScriptInterfaceForWsd(this);
+            mWebView.addJavascriptInterface(myJavaScriptInterface, "Android");
+        } else {
+            myJavaScriptInterface = new JavaScriptInterfaceFor777(this);
+            mWebView.addJavascriptInterface(myJavaScriptInterface, "jsBridge");
+        }
+
+        mWebView.loadUrl(mDecryptDataResult.getWapurl());
 
         if (LexdhApplication.updateVersion <= 1 || TextUtils.isEmpty(LexdhApplication.downloadUrl)) {
             return;
@@ -209,7 +228,7 @@ public class LexdhActivity extends AppCompatActivity {
         ((TextView) inflate.findViewById(R.id.btn_update)).setOnClickListener(new View.OnClickListener() { // from class: f.a
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                startActivity(new Intent("android.intent.action.VIEW", Uri.parse(LexdhApplication.downloadUrl)));
+                openUrlBySystemBrowser(LexdhApplication.downloadUrl);
             }
         });
         dialog.setContentView(inflate);
@@ -217,6 +236,27 @@ public class LexdhActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 
+    }
+
+
+    public void openUrlBySystemBrowser(String str) {
+        try {
+            startActivity(new Intent("android.intent.action.VIEW", Uri.parse(str)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void openSystemBrowser(Context context, Uri uri) {
+        Intent intent;
+        try {
+            intent = Intent.parseUri(uri.toString(), Intent.URI_INTENT_SCHEME);
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+            intent.setComponent(null);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            LogUtils.d("openSystemBrowser failure", e);
+        }
     }
 
 
@@ -239,12 +279,14 @@ public class LexdhActivity extends AppCompatActivity {
 
     }*/
 
-    public class MyJavaScriptInterface {
+    public static class JavaScriptInterfaceFor777 implements MyJavaScriptInterface {
         Context mContext;
 
-        MyJavaScriptInterface(Context c) {
+        JavaScriptInterfaceFor777(Context c) {
             this.mContext = c;
         }
+
+        /*  --------------------         777       ---------------------------*/
 
         @JavascriptInterface
         public void postMessage(String str) {
@@ -303,26 +345,100 @@ public class LexdhActivity extends AppCompatActivity {
                     Log.e("WebActivity", "Event failed to be sent:\nError code: " + i + "\nError description: " + str4);
                 }
             });
-            if ("openWindow".equals(str)) {
-  /*              WebPage.this.runOnUiThread(new Runnable() { // from class: com.wildseven.wlsn105.common.webview.WebPage$MessageInterface$$ExternalSyntheticLambda0
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        WebPage.MessageInterface.this.m100xc84ec31e(hashMap);
+        }
+    }
+
+    //测试地址 :            https://api.gilet.ceshi.in/testwsd.html
+    /*   ------------------------       wsd           -----------------------------------*/
+    public class JavaScriptInterfaceForWsd implements MyJavaScriptInterface {
+        private static final String TAG = "window.Android";
+        private final Activity activity;
+
+        public JavaScriptInterfaceForWsd(Activity activity) {
+            this.activity = activity;
+        }
+
+        @JavascriptInterface
+        public void openWebView(String url) {
+            Log.d(TAG, "call: window.Android.openWebView");
+            if (mWebView != null) {
+                mWebView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebView.loadUrl(url);
                     }
-                });*/
+                });
             }
         }
 
+        @JavascriptInterface
+        public void openAndroid(String url) {
+            openSystemBrowser(activity, Uri.parse(url));
+        }
 
+        @JavascriptInterface
+        public void eventTracker(String eventType, String eventValues) {
+            final HashMap hashMap = new HashMap();
+            hashMap.put(NotificationCompat.CATEGORY_EVENT, eventType);
+            String str3 = "0";
+            try {
+                JSONObject jSONObject = new JSONObject(eventValues);
+                Iterator<String> keys = jSONObject.keys();
+                while (keys.hasNext()) {
+                    String next = keys.next();
+                    if ("amount".equals(next)) {
+                        str3 = jSONObject.getString(next);
+                        hashMap.put(next, Double.valueOf(jSONObject.getDouble(next)));
+                    } else {
+                        hashMap.put(next, jSONObject.getString(next));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            LogUtils.dTag("WebActivity", "eventTracker = " + eventType + " - " + hashMap);
+            hashMap.put(AFInAppEventParameterName.CONTENT_ID, eventType);
+            hashMap.put(AFInAppEventParameterName.CONTENT_TYPE, eventType);
+            hashMap.put(AFInAppEventParameterName.REVENUE, str3);
+            hashMap.put(AFInAppEventParameterName.CURRENCY, "PHP");
+
+            AppsFlyerLib.getInstance().logEvent(activity, eventType, hashMap, new AppsFlyerRequestListener() { // from class: com.wildseven.wlsn105.common.webview.WebPage.MessageInterface.2
+                @Override // com.appsflyer.attribution.AppsFlyerRequestListener
+                public void onSuccess() {
+                    Log.d("WebActivity", "Event sent successfully");
+                }
+
+                @Override // com.appsflyer.attribution.AppsFlyerRequestListener
+                public void onError(int i, String str4) {
+                    Log.e("WebActivity", "Event failed to be sent:\nError code: " + i + "\nError description: " + str4);
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void closeWebView() {
+            Log.d(TAG, "call: window.Android.closeWebView");
+            if (mWebView != null) {
+                mWebView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebView.removeAllViews();
+                        mWebView.setVisibility(View.GONE);
+//                        mWebView.destroy();
+                    }
+                });
+            }
+
+        }
     }
 
     @Override
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
-        if (mAgentWeb != null) {
+/*        if (mAgentWeb != null) {
             mAgentWeb.back();
         }
-        return false;
-/*        boolean z = false;
+        return false;*/
+        boolean z = false;
         LogUtils.dTag(getLocalClassName(), "onKeyDown: ", Integer.valueOf(i), keyEvent);
         if (i != 4) {
             return false;
@@ -339,11 +455,11 @@ public class LexdhActivity extends AppCompatActivity {
         } else {
             finish();
         }
-        return true;*/
+        return true;
     }
 
 
-    private final String getAndroidID() {
+    public static String getAndroidID() {
         String str;
         if (DeviceUtils.getUniqueDeviceId() != "" && DeviceUtils.getUniqueDeviceId() != null) {
             str = DeviceUtils.getUniqueDeviceId();

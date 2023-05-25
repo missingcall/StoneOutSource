@@ -2,26 +2,29 @@ package com.jilsfdivbvetwo.jlsat167.bean;
 
 public class DecryptDataResult {
 
-/*
-*
-*
-* {name:'AZ测试跳转',
- wapurl:'https://api.gilet.ceshi.in/testku.html',
- iswap:1,
- splash:'https://feilvb.oss-ap-southeast-6.aliyuncs.com//gilet/uploads/images/368771edbc83ea47af3238811204de1b.png',
- downurl:'https://feilvb.oss-ap-southeast-6.aliyuncs.com//gilet/uploads/files/apk/202304/19_1681873341_uXlzOLvvra.apk',
- version:5,
- appsflyer_id:0}
-*
-*
-* */
+
+
+    /*
+    *
+    *
+    * {name:'AZ测试跳转',
+     wapurl:'https://api.gilet.ceshi.in/testku.html',
+     iswap:1,
+     splash:'https://feilvb.oss-ap-southeast-6.aliyuncs.com//gilet/uploads/images/368771edbc83ea47af3238811204de1b.png',
+     downurl:'https://feilvb.oss-ap-southeast-6.aliyuncs.com//gilet/uploads/files/apk/202304/19_1681873341_uXlzOLvvra.apk',
+     version:5,
+     appsflyer_id:0}
+    *
+    *
+    * */
     private String name;
     private String wapurl;
-    private int iswap;
+    private int iswap;//0不跳转  1跳转
     private String splash;
     private String downurl;
     private int version;
     private int appsflyer_id;
+    private String webview_set;//webview监听方案：777KU/WSD，testku.html是777KU，
 
     public void setName(String name) {
         this.name = name;
@@ -79,16 +82,26 @@ public class DecryptDataResult {
         return appsflyer_id;
     }
 
+
+    public String getWebview_set() {
+        return webview_set;
+    }
+
+    public void setWebview_set(String webview_set) {
+        this.webview_set = webview_set;
+    }
+
     @Override
     public String toString() {
         return "DecryptDataResult{" +
-                "name:'" + name + '\'' +
-                ", wapurl:'" + wapurl + '\'' +
-                ", iswap:" + iswap +
-                ", splash:'" + splash + '\'' +
-                ", downurl:'" + downurl + '\'' +
-                ", version:" + version +
-                ", appsflyer_id:" + appsflyer_id +
+                "name='" + name + '\'' +
+                ", wapurl='" + wapurl + '\'' +
+                ", iswap=" + iswap +
+                ", splash='" + splash + '\'' +
+                ", downurl='" + downurl + '\'' +
+                ", version=" + version +
+                ", appsflyer_id=" + appsflyer_id +
+                ", webview_set='" + webview_set + '\'' +
                 '}';
     }
 }
