@@ -7,6 +7,7 @@ public class StoneResult {
     private String data;
     private long now;
 
+
     public void setCode(int code) {
         this.code = code;
     }

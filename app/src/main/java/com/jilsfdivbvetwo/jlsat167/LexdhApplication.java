@@ -8,13 +8,66 @@ import com.blankj.utilcode.util.LogUtils;
 
 public class LexdhApplication extends Application {
 
+
+    /*
+    *   App名称：测试跳转777KU
+        appkey：e4b3dc7b23652624118d9c769dfb5625
+        APP秘钥 ：jaix8WnfqRFpQlLk
+
+        App名称：测试跳转WSD
+        appkey：ea829534fdc2b87421a0a1ad59db9620
+        APP秘钥 ：jaix8WnfqRFpQlLk
+
+        App名称：测试不跳转
+        appkey：8909f537acd4bd473ae0cbf745e505b6
+        APP秘钥 ：jaix8WnfqRFpQlLk
+
+        App名称：测试版本更新
+        appkey：3e216b6296be95de8d127698de95674d
+        APP秘钥 ：jaix8WnfqRFpQlLk
+    *
+    *
+    * */
     public static final String AF_DEV_KEY = "CPHERDeCSretREiAbQg38V";
-    public static final String appKey = "8029da0911f7bc3a49c939d7d1d28ac0";
-    public static final String appSecret = "3Dd7Jy0xJtWQfNkb";
-    public static final String appUrl = "https://f1sdfgpt.buzz/api/v1/app/";
+    public static final String APPKEY = "8029da0911f7bc3a49c939d7d1d28ac0"; //167
+    public static final String APPSECRET = "3Dd7Jy0xJtWQfNkb"; //167
+    //    public static final String APPKEY = "3e216b6296be95de8d127698de95674d"; //测试
+//    public static final String APPSECRET = "jaix8WnfqRFpQlLk"; //测试
+    //Useragent的最新 {Version}值是 1.0.10（请每个新包检查该版本号）
+    public static final String USERAGENT_VERSION = "1.0.10";
+
+
+    /*
+     *
+     *    接口地址，5选一都可以用，返回的格式不一样
+     * */
+    public static final String appUrl1 = "https://f1sdfgpt.buzz/api/v1/app/";
+    public static final String appUrl2 = "https://f1sdfgpt.buzz/api/v2/scxx/";
+    public static final String appUrl3 = "https://f1sdfgpt.buzz/api/v3/apsdfgsevbp/";
+    public static final String appUrl4 = "https://f1sdfgpt.buzz/api/v4/ghjfd/";
+    public static final String appUrl5 = "https://f1sdfgpt.buzz/api/v5/jfgfc/";
+
+    public static final String appUrlTest = "https://api.gilet.ceshi.in/api/v1/app/";
+    /*
+    * 备用域名
+    *   j4sdxcqw.buzz
+        j4qwmjhy.buzz
+        j5fdxoop.buzz
+        j5xdstyg.buzz
+        j6fdsqxu.buzz
+        j2qwefds.buzz
+        j7hgvdqt.buzz
+        j7bvfdqi.buzz
+        j8jhvdqe.buzz
+        j8mhbfsu.buzz
+    *
+    * */
+
     private static Context context = null;
     public static String downloadUrl = "";
-//    public static final String privacy = "https://sites.google.com/view/wild7777/home";
+    public static String webviewSet = "";  //777KU / WSD
+    public static final String WEBVIEW_SET_777KU = "777KU";
+    public static final String WEBVIEW_SET_WSD = "WSD";
     public static int updateVersion = 1;
 
 
@@ -54,7 +107,8 @@ public class LexdhApplication extends Application {
 
     public void initLog() {
         final LogUtils.Config config = LogUtils.getConfig()
-//                .setLogSwitch(BuildConfig.DEBUG)// 设置 log 总开关，包括输出到控制台和文件，默认开
+                //TODO 上线:需关闭log
+                .setLogSwitch(BuildConfig.DEBUG)// 设置 log 总开关，包括输出到控制台和文件，默认开
 //                .setConsoleSwitch(BuildConfig.DEBUG)// 设置是否输出到控制台开关，默认开
                 .setGlobalTag(null)// 设置 log 全局标签，默认为空
                 // 当全局标签不为空时，我们输出的 log 全部为该 tag，
